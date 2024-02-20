@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://cn8e1xus3lgre"]
+
+[ext_resource type="Script" path="res://SceneManager.gd" id="1_i4b6p"]
+[ext_resource type="Texture2D" uid="uid://byrs1kiglemeh" path="res://assets/images/backgrounds/SpaceBackgroundTile.png" id="1_n1125"]
+[ext_resource type="Texture2D" uid="uid://6xr4cq7v67l6" path="res://assets/images/planets/planet1.png" id="2_6perc"]
+[ext_resource type="Texture2D" uid="uid://d21awmc17gmfr" path="res://assets/images/asteroids/asteroid1.png" id="3_clocw"]
+[ext_resource type="PackedScene" uid="uid://b1pe0xqlvuu1n" path="res://Character.tscn" id="5_mq360"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_pg387"]
+panorama = ExtResource("1_n1125")
+
+[sub_resource type="Sky" id="Sky_nkok3"]
+sky_material = SubResource("PanoramaSkyMaterial_pg387")
+
+[sub_resource type="Environment" id="Environment_0b8j2"]
+background_mode = 3
+sky = SubResource("Sky_nkok3")
+glow_enabled = true
+glow_intensity = 1.19
+glow_strength = 1.1
+glow_bloom = 0.19
+glow_blend_mode = 0
+glow_hdr_scale = 1.66
+glow_hdr_luminance_cap = 28.52
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_akelj"]
+auto_exposure_enabled = true
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_i4b6p")
+PlayerScene = ExtResource("5_mq360")
+
+[node name="Bullets" type="Node2D" parent="."]
+
+[node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
+spawn_path = NodePath("../Bullets")
+
+[node name="SpaceEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0b8j2")
+camera_attributes = SubResource("CameraAttributesPractical_akelj")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="BackgroundParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.1, 0.1)
+
+[node name="SpaceBackgroundTile" type="Sprite2D" parent="ParallaxBackground/BackgroundParallaxLayer"]
+texture = ExtResource("1_n1125")
+centered = false
+
+[node name="PlanetsParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.5, 0.5)
+
+[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/PlanetsParallaxLayer"]
+position = Vector2(801, 463)
+scale = Vector2(0.75, 0.75)
+texture = ExtResource("2_6perc")
+
+[node name="AsteroidsParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.8, 0.8)
+
+[node name="Asteroid1" type="Sprite2D" parent="ParallaxBackground/AsteroidsParallaxLayer"]
+position = Vector2(392.5, 195.5)
+scale = Vector2(0.43, 0.43)
+texture = ExtResource("3_clocw")
+
+[node name="SpawnLocations" type="Node2D" parent="."]
+
+[node name="0" type="Node2D" parent="SpawnLocations" groups=["PlayerSpawnPoint"]]
+position = Vector2(444, 333)
+
+[node name="1" type="Node2D" parent="SpawnLocations" groups=["PlayerSpawnPoint"]]
+position = Vector2(564, 332)

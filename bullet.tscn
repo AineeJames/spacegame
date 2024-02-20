@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=3 uid="uid://b7hsae3ku23pp"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_8k0s0"]
+[ext_resource type="Shader" path="res://circle.gdshader" id="1_vuqqe"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_k18i4"]
+shader = ExtResource("1_vuqqe")
+
+[sub_resource type="Gradient" id="Gradient_dtulv"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_73wlr"]
+gradient = SubResource("Gradient_dtulv")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6qg00"]
+radius = 13.0
+
+[node name="Bullet" type="Area2D" groups=["BulletGroup"]]
+script = ExtResource("1_8k0s0")
+
+[node name="DeadlyTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+autostart = true
+
+[node name="BulletSprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_k18i4")
+scale = Vector2(0.1, 25.5)
+texture = SubResource("GradientTexture1D_73wlr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_6qg00")
+disabled = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="DeadlyTimer" to="." method="_on_deadly_timer_timeout"]

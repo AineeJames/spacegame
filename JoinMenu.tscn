@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://bibm36gikkh6y"]
+
+[ext_resource type="Script" path="res://MultiplayerController.gd" id="1_2fx0w"]
+
+[node name="JoinMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_2fx0w")
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+alignment = 1
+
+[node name="UserNameInput" type="HBoxContainer" parent="ButtonsContainer"]
+layout_mode = 2
+size_flags_vertical = 2
+
+[node name="UserNameLabel" type="Label" parent="ButtonsContainer/UserNameInput"]
+layout_mode = 2
+text = "Username:"
+
+[node name="UserNameLineEdit" type="LineEdit" parent="ButtonsContainer/UserNameInput"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="ButtonsContainer"]
+layout_mode = 2
+text = "HOST"
+
+[node name="JoinButton" type="Button" parent="ButtonsContainer"]
+layout_mode = 2
+text = "JOIN"
+
+[node name="StartButton" type="Button" parent="ButtonsContainer"]
+layout_mode = 2
+text = "START"
+
+[connection signal="pressed" from="ButtonsContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="ButtonsContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="ButtonsContainer/StartButton" to="." method="_on_start_button_pressed"]

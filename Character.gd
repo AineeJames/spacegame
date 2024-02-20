@@ -46,7 +46,6 @@ func _ready():
 	
 	if is_authority():
 		Camera.make_current()
-		
 	GameManager.updated_player_score.connect(_on_updated_player_score)
 	GameManager.player_took_damge.connect(_on_player_took_damage)
 	
@@ -78,7 +77,6 @@ func _input(event):
 			var bump_velocity = Vector2(SHOOT_BUMP_AMOUNT*cos(bump_angle), SHOOT_BUMP_AMOUNT*sin(bump_angle))
 			linear_velocity += bump_velocity
 			
-			#shoot_bullet.rpc(bump_angle + PI)
 			GameManager.fire_bullet.emit(bump_angle + PI, global_position)
 
 func _on_updated_player_score(peer_id, new_score):
@@ -90,13 +88,6 @@ func _on_free_score_timer_timeout():
 		GameManager.add_to_player_score.emit(multiplayer.get_unique_id(), 1)
 		var random_delay = rng.randf_range(1.0, 3.0)
 		FreeScoreTimer.start(random_delay)
-		
-@rpc("any_peer", "call_local", "reliable")
-func shoot_bullet(bullet_angle):
-	var bullet: Area2D = Bullet.instantiate()
-	bullet.velocity = Vector2(cos(bullet_angle), sin(bullet_angle)).normalized()
-	bullet.global_position = global_position
-	get_tree().root.add_child(bullet)
 	
 func _on_player_took_damage(peer_id, new_health):
 	if uuid == peer_id:

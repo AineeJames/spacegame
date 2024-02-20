@@ -8,7 +8,7 @@ var velocity
 
 func _ready():
 	Collision.disabled = true
-	modulate.a = 0.5
+	modulate.a = 0.25
 
 func _process(delta):
 	position += velocity * BULLET_SPEED * delta

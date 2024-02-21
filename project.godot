@@ -30,6 +30,16 @@ fire={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":1,"position":Vector2(719, 48),"global_position":Vector2(727, 128),"factor":1.0,"button_index":1,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
+zoom_in={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":16,"position":Vector2(815, 33),"global_position":Vector2(823, 113),"factor":0.0300018,"button_index":5,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
+zoom_out={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":8,"position":Vector2(852, 31),"global_position":Vector2(860, 111),"factor":0.0300018,"button_index":4,"canceled":false,"pressed":true,"double_click":false,"script":null)
+]
+}
 
 [rendering]
 

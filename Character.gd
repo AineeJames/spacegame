@@ -93,17 +93,23 @@ func hint_nametag_dir(peer_id):
 
 	
 func _input(event):
+	
 	if is_authority():
 		if Input.is_action_just_pressed("fire"):
 			var bump_angle = get_local_mouse_position().angle() + PI + rotation
 			var bump_velocity = Vector2(SHOOT_BUMP_AMOUNT*cos(bump_angle), SHOOT_BUMP_AMOUNT*sin(bump_angle))
 			linear_velocity += bump_velocity
 		
-			fire_bullet.rpc(uuid, bump_angle + PI)
+			fire_bullet.rpc(uuid, bump_angle + PI, linear_velocity)
+			
+		if Input.is_action_just_pressed("zoom_in"):
+			$Camera2D.zoom += Vector2.ONE * 0.01
+		if Input.is_action_just_pressed("zoom_out"):
+			$Camera2D.zoom -= Vector2.ONE * 0.01
 
 
 @rpc("any_peer", "call_local")
-func fire_bullet(peer_id, bullet_angle):
+func fire_bullet(peer_id, bullet_angle, vel):
 	var bullet: Area2D = Bullet.instantiate()
 	bullet.peer_id = peer_id
 	bullet.global_position = global_position

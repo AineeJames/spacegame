@@ -1,10 +1,22 @@
-[gd_scene load_steps=10 format=3 uid="uid://cn8e1xus3lgre"]
+[gd_scene load_steps=22 format=3 uid="uid://cn8e1xus3lgre"]
 
 [ext_resource type="Script" path="res://SceneManager.gd" id="1_i4b6p"]
 [ext_resource type="Texture2D" uid="uid://byrs1kiglemeh" path="res://assets/images/backgrounds/SpaceBackgroundTile.png" id="1_n1125"]
 [ext_resource type="Texture2D" uid="uid://6xr4cq7v67l6" path="res://assets/images/planets/planet1.png" id="2_6perc"]
 [ext_resource type="Texture2D" uid="uid://d21awmc17gmfr" path="res://assets/images/asteroids/asteroid1.png" id="3_clocw"]
+[ext_resource type="Texture2D" uid="uid://8diujfjd8mpg" path="res://assets/images/asteroids/asteroid2.png" id="4_oxw0e"]
+[ext_resource type="Texture2D" uid="uid://def2n3tywt8qf" path="res://assets/images/asteroids/asteroid3.png" id="5_gmngk"]
 [ext_resource type="PackedScene" uid="uid://b1pe0xqlvuu1n" path="res://Character.tscn" id="5_mq360"]
+[ext_resource type="Texture2D" uid="uid://cjqlwn3wdnnua" path="res://assets/images/asteroids/asteroid4.png" id="6_cvs4p"]
+[ext_resource type="Texture2D" uid="uid://bx2i6b1rlw77k" path="res://assets/images/asteroids/asteroid5.png" id="7_1ug7h"]
+[ext_resource type="Texture2D" uid="uid://5uqlq8cmwwnt" path="res://assets/images/asteroids/asteroid6.png" id="8_0bac0"]
+[ext_resource type="Texture2D" uid="uid://bh7ni28owvmfs" path="res://assets/images/planets/planet2.png" id="10_i5iff"]
+[ext_resource type="Texture2D" uid="uid://dpawsobb0ws0t" path="res://assets/images/planets/planet3.png" id="11_drxhl"]
+[ext_resource type="Texture2D" uid="uid://c7r02f3oh3iww" path="res://assets/images/planets/planet4.png" id="12_cmsi2"]
+[ext_resource type="Texture2D" uid="uid://drf284u8rpisf" path="res://assets/images/planets/planet5.png" id="13_vyvhj"]
+[ext_resource type="Texture2D" uid="uid://bttf0glmr17cr" path="res://assets/images/planets/planet6.png" id="14_l7re4"]
+[ext_resource type="Texture2D" uid="uid://1cbi0i1hhn08" path="res://assets/images/planets/planet7.png" id="15_cerqt"]
+[ext_resource type="Texture2D" uid="uid://dlsb3rddksim2" path="res://assets/images/planets/planet8.png" id="16_2bbnc"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_pg387"]
 panorama = ExtResource("1_n1125")
@@ -27,12 +39,15 @@ auto_exposure_enabled = true
 [node name="Game" type="Node2D"]
 script = ExtResource("1_i4b6p")
 PlayerScene = ExtResource("5_mq360")
+ASTEROID_IMAGES = Array[Texture2D]([ExtResource("3_clocw"), ExtResource("4_oxw0e"), ExtResource("5_gmngk"), ExtResource("6_cvs4p"), ExtResource("7_1ug7h"), ExtResource("8_0bac0")])
+PLANET_IMAGES = Array[Texture2D]([ExtResource("2_6perc"), ExtResource("10_i5iff"), ExtResource("11_drxhl"), ExtResource("12_cmsi2"), ExtResource("13_vyvhj"), ExtResource("14_l7re4"), ExtResource("15_cerqt"), ExtResource("16_2bbnc")])
 
 [node name="SpaceEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0b8j2")
 camera_attributes = SubResource("CameraAttributesPractical_akelj")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+follow_viewport_enabled = true
 
 [node name="BackgroundParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.1, 0.1)
@@ -41,21 +56,20 @@ motion_scale = Vector2(0.1, 0.1)
 texture = ExtResource("1_n1125")
 centered = false
 
-[node name="PlanetsParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+[node name="PlanetsParallaxLayer1" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.5, 0.5)
 
-[node name="Planet1" type="Sprite2D" parent="ParallaxBackground/PlanetsParallaxLayer"]
-position = Vector2(801, 463)
-scale = Vector2(0.75, 0.75)
-texture = ExtResource("2_6perc")
+[node name="PlanetsParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.6, 0.6)
 
-[node name="AsteroidsParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+[node name="PlanetsParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.7, 0.7)
+
+[node name="AsteroidsParallaxLayer1" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.8, 0.8)
 
-[node name="Asteroid1" type="Sprite2D" parent="ParallaxBackground/AsteroidsParallaxLayer"]
-position = Vector2(392.5, 195.5)
-scale = Vector2(0.43, 0.43)
-texture = ExtResource("3_clocw")
+[node name="AsteroidsParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2(0.85, 0.85)
 
 [node name="SpawnLocations" type="Node2D" parent="."]
 

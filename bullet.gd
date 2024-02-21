@@ -1,6 +1,7 @@
 extends Area2D
 
 @export var BULLET_SPEED: float = 500.0
+@export var TIME_UNTIL_BULLET_DEATH: float = 5.0
 
 @onready var Collision: CollisionShape2D = $CollisionShape2D
 
@@ -10,6 +11,9 @@ var peer_id
 func _ready():
 	Collision.disabled = true
 	modulate.a = 0.25
+	get_tree().create_timer(TIME_UNTIL_BULLET_DEATH).timeout.connect(func(): 
+		queue_free()
+	)
 
 func _process(delta):
 	position += velocity * BULLET_SPEED * delta

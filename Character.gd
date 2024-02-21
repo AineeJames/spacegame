@@ -1,7 +1,8 @@
 extends RigidBody2D
 
 @export var SHOOT_BUMP_AMOUNT: float = 100.0
-@export var ENEMY_ARROW_LENGTH: float = 100.0
+@export var ENEMY_ARROW_START: float = 50.0
+@export var ENEMY_ARROW_END: float = 100.0
 
 @export_category("Multiplayer Syncing")
 @export_range(0.0, 1.0, 0.01) var SYNC_LERP_WEIGHT = 0.5
@@ -9,13 +10,12 @@ extends RigidBody2D
 @export_range(0.0, 5.0, 0.01) var SYNC_DELTA_INTERVAL = 0.0
 
 @onready var Bullet: PackedScene = load("res://bullet.tscn")
+@onready var DamageParticles: PackedScene = load("res://scenes/particles/damage_particles.tscn")
 
 @onready var DebugLine: Line2D = $DebugLine
 @onready var Syncronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @onready var Camera: Camera2D = $Camera2D
 @onready var NameTag: Label = $NameTag
-@onready var ScoreLabel: Label = $ScoreLabel
-@onready var FreeScoreTimer: Timer = $FreeScoreTimer
 @onready var HealthBar: ProgressBar = $HealthBar
 
 @export var user_name: String = "Guest"
@@ -27,6 +27,7 @@ var sync_angular_vel = 0
 
 var rng
 var uuid
+var prev_scale
 var enemy_arrows = {}
 
 func is_authority():
@@ -36,6 +37,7 @@ func _ready():
 	uuid = name.to_int()
 	
 	NameTag.text = user_name
+	prev_scale = $Sprite2D.scale
 	
 	Syncronizer.replication_interval = SYNC_REPLICATION_INTERVAL
 	Syncronizer.delta_interval = SYNC_DELTA_INTERVAL
@@ -83,8 +85,8 @@ func hint_nametag_dir(peer_id):
 	if relative_pos.length() > third_screen.length():
 		var arrow_angle = relative_pos.angle() - rotation
 		$DebugLine.clear_points()
-		$DebugLine.add_point(Vector2.ZERO)
-		$DebugLine.add_point(Vector2(ENEMY_ARROW_LENGTH*cos(arrow_angle), ENEMY_ARROW_LENGTH*sin(arrow_angle)))
+		$DebugLine.add_point(Vector2(ENEMY_ARROW_START*cos(arrow_angle), ENEMY_ARROW_START*sin(arrow_angle)))
+		$DebugLine.add_point(Vector2(ENEMY_ARROW_END*cos(arrow_angle), ENEMY_ARROW_END*sin(arrow_angle)))
 		
 	else:
 		$DebugLine.clear_points()
@@ -109,7 +111,25 @@ func fire_bullet(peer_id, bullet_angle):
 	get_tree().root.add_child(bullet)
 	
 	
-func _on_player_took_damage(peer_id, new_health):
+func _on_player_took_damage(peer_id, new_health, bump_angle):
 	if peer_id == uuid:
+		var bump_velocity = Vector2(SHOOT_BUMP_AMOUNT*cos(bump_angle), SHOOT_BUMP_AMOUNT*sin(bump_angle))
+		linear_velocity += bump_velocity
+		
 		HealthBar.value = new_health
+		
+		var particles = DamageParticles.instantiate()
+		particles.global_position = global_position
+		particles.emitting = false
+		particles.emitting = true
+		get_tree().root.add_child(particles)
+		
+		var tween: Tween = get_tree().create_tween()
+		tween.parallel().tween_property($Sprite2D, "modulate", Colors.ENEMY_DAMAGE, 0.1).set_ease(Tween.EASE_IN)
+		tween.parallel().tween_property($Sprite2D, "scale", Vector2.ZERO, 0.1).set_ease(Tween.EASE_IN)
+		tween.tween_callback(func():
+			tween = get_tree().create_tween()
+			tween.parallel().tween_property($Sprite2D, "modulate", Colors.WHITE, 0.2).set_ease(Tween.EASE_OUT)
+			tween.parallel().tween_property($Sprite2D, "scale", prev_scale, 0.2).set_ease(Tween.EASE_OUT)
+		)
 	

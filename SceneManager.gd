@@ -2,10 +2,6 @@ extends Node2D
 
 @export var PlayerScene: PackedScene
 
-@onready var BulletSpawner: MultiplayerSpawner = $BulletSpawner
-@onready var Bullets: Node2D = $Bullets
-@onready var Bullet: PackedScene = load("res://bullet.tscn")
-
 func _ready():
 	var index = 0
 	for i in GameManager.players:

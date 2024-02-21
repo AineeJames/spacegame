@@ -17,11 +17,11 @@ config/features=PackedStringArray("4.2", "Forward Plus")
 [autoload]
 
 GameManager="*res://GameManager.gd"
+Colors="*res://assets/colors/Colors.gd"
 
 [display]
 
 window/stretch/mode="canvas_items"
-window/dpi/allow_hidpi=false
 
 [input]
 

@@ -19,7 +19,7 @@ func _on_body_entered(body):
 		body.queue_free()
 		queue_free()
 	if body.is_in_group("PlayerGroup"):
-		GameManager.damge_player.emit(body.uuid, 10.0)
+		GameManager.damge_player.emit(body.uuid, 10.0, velocity.angle())
 		queue_free()
 
 func _on_deadly_timer_timeout():

@@ -31,8 +31,8 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_awqqe"]
 gradient = SubResource("Gradient_ynl8l")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3cjsb"]
-size = Vector2(62, 60)
+[sub_resource type="CircleShape2D" id="CircleShape2D_py2ox"]
+radius = 31.0161
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yqpa7"]
 bg_color = Color(0, 0, 0, 1)
@@ -51,6 +51,7 @@ physics_material_override = SubResource("PhysicsMaterial_4wi4c")
 gravity_scale = 1.66533e-16
 lock_rotation = true
 script = ExtResource("1_jqt3u")
+ENEMY_ARROW_START = 75.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_u8e7o")
@@ -79,7 +80,7 @@ scale = Vector2(0.25, 62.5)
 texture = SubResource("GradientTexture1D_awqqe")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_3cjsb")
+shape = SubResource("CircleShape2D_py2ox")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.75, 0.75)
@@ -100,3 +101,4 @@ show_percentage = false
 
 [node name="DebugLine" type="Line2D" parent="."]
 closed = true
+width = 5.0

@@ -1,6 +1,7 @@
 extends RigidBody2D
 
 @export var SHOOT_BUMP_AMOUNT: float = 100.0
+@export var ENEMY_ARROW_LENGTH: float = 100.0
 
 @export_category("Multiplayer Syncing")
 @export_range(0.0, 1.0, 0.01) var SYNC_LERP_WEIGHT = 0.5
@@ -26,17 +27,13 @@ var sync_angular_vel = 0
 
 var rng
 var uuid
+var enemy_arrows = {}
 
 func is_authority():
-	return Syncronizer.get_multiplayer_authority() == multiplayer.get_unique_id()
+	return multiplayer.get_unique_id() == uuid
 
 func _ready():
-	
-	uuid = multiplayer.get_unique_id()
-	
-	var title = "UUID: " + str(multiplayer.get_unique_id())
-	title += " USER_NAME: " + GameManager.players[multiplayer.get_unique_id()].user_name
-	DisplayServer.window_set_title(title)
+	uuid = name.to_int()
 	
 	NameTag.text = user_name
 	
@@ -46,29 +43,52 @@ func _ready():
 	
 	if is_authority():
 		Camera.make_current()
-	GameManager.updated_player_score.connect(_on_updated_player_score)
+		var title = "UUID: " + str(uuid)
+		title += " USER_NAME: " + GameManager.players[uuid].user_name
+		DisplayServer.window_set_title(title)
+		
 	GameManager.player_took_damge.connect(_on_player_took_damage)
 	
 	rng = RandomNumberGenerator.new()
 	rng.seed = multiplayer.get_unique_id()
 
 func _physics_process(delta):
+	GameManager.update_player_position(uuid, global_position)
+	
 	if is_authority():
+		
 		HealthBar.value = GameManager.players[uuid].health
 		sync_pos = global_position
 		sync_linear_vel = linear_velocity
 		sync_angular_vel = angular_velocity
 		sync_rot = rotation
 		
-		DebugLine.clear_points()
-		DebugLine.add_point(Vector2.ZERO)
-		DebugLine.add_point(get_local_mouse_position())
-		
+		for peer in multiplayer.get_peers():
+			if peer != uuid:
+				hint_nametag_dir(peer)
+
 	else:
 		global_position = global_position.lerp(sync_pos, SYNC_LERP_WEIGHT)
 		rotation = lerpf(rotation, sync_rot, SYNC_LERP_WEIGHT)
 		linear_velocity = linear_velocity.lerp(sync_linear_vel, SYNC_LERP_WEIGHT)
 		angular_velocity = lerpf(angular_velocity, sync_angular_vel, SYNC_LERP_WEIGHT)
+
+func hint_nametag_dir(peer_id):
+	var enemy_player_pos = Vector2(GameManager.players[peer_id].pos_x, GameManager.players[peer_id].pos_y)
+	var relative_pos = enemy_player_pos - global_position
+	
+	var screen_size = get_viewport_rect().size
+	var third_screen = screen_size / 3
+	
+	if relative_pos.length() > third_screen.length():
+		var arrow_angle = relative_pos.angle() - rotation
+		$DebugLine.clear_points()
+		$DebugLine.add_point(Vector2.ZERO)
+		$DebugLine.add_point(Vector2(ENEMY_ARROW_LENGTH*cos(arrow_angle), ENEMY_ARROW_LENGTH*sin(arrow_angle)))
+		
+	else:
+		$DebugLine.clear_points()
+
 	
 func _input(event):
 	if is_authority():
@@ -76,20 +96,20 @@ func _input(event):
 			var bump_angle = get_local_mouse_position().angle() + PI + rotation
 			var bump_velocity = Vector2(SHOOT_BUMP_AMOUNT*cos(bump_angle), SHOOT_BUMP_AMOUNT*sin(bump_angle))
 			linear_velocity += bump_velocity
-			
-			GameManager.fire_bullet.emit(bump_angle + PI, global_position)
+		
+			fire_bullet.rpc(uuid, bump_angle + PI)
 
-func _on_updated_player_score(peer_id, new_score):
-	if uuid == peer_id:
-		ScoreLabel.text = "Score: " + str(new_score)
 
-func _on_free_score_timer_timeout():
-	if is_authority():
-		GameManager.add_to_player_score.emit(multiplayer.get_unique_id(), 1)
-		var random_delay = rng.randf_range(1.0, 3.0)
-		FreeScoreTimer.start(random_delay)
+@rpc("any_peer", "call_local")
+func fire_bullet(peer_id, bullet_angle):
+	var bullet: Area2D = Bullet.instantiate()
+	bullet.peer_id = peer_id
+	bullet.global_position = global_position
+	bullet.velocity = Vector2(cos(bullet_angle), sin(bullet_angle)).normalized()
+	get_tree().root.add_child(bullet)
+	
 	
 func _on_player_took_damage(peer_id, new_health):
-	if uuid == peer_id:
-		print("{0}'s health is now {1}".format([peer_id, new_health]))
+	if peer_id == uuid:
 		HealthBar.value = new_health
+	

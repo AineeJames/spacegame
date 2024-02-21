@@ -70,7 +70,9 @@ func send_player_info(user_name, player_id):
 			"user_name": user_name,
 			"player_id": player_id,
 			"score": 0.0,
-			"health": 100.0
+			"health": 100.0,
+			"pos_x": 0.0,
+			"pos_y": 0.0,
 		}
 	
 	if multiplayer.is_server():

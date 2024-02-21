@@ -4,7 +4,6 @@ extends Node2D
 
 @onready var BulletSpawner: MultiplayerSpawner = $BulletSpawner
 @onready var Bullets: Node2D = $Bullets
-
 @onready var Bullet: PackedScene = load("res://bullet.tscn")
 
 func _ready():
@@ -18,15 +17,3 @@ func _ready():
 			if spawn.name == str(index):
 				current_player.global_position = spawn.global_position
 		index += 1
-		
-	GameManager.fire_bullet.connect(_on_fire_bullet)
-		
-func _on_fire_bullet(bullet_angle, position):
-	
-	var bullet: Area2D = Bullet.instantiate()
-	bullet.global_position = position
-	bullet.velocity = Vector2(cos(bullet_angle), sin(bullet_angle)).normalized()
-	Bullets.add_child(bullet)
-	#BulletSpawner.add_spawnable_scene("res://bullet.tscn")
-	#BulletSpawner.spawn({"velocity": velocity, "global_position": position})
-	

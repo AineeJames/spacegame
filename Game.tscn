@@ -16,12 +16,10 @@ sky_material = SubResource("PanoramaSkyMaterial_pg387")
 background_mode = 3
 sky = SubResource("Sky_nkok3")
 glow_enabled = true
-glow_intensity = 1.19
-glow_strength = 1.1
-glow_bloom = 0.19
+glow_intensity = 1.01
+glow_strength = 0.8
+glow_bloom = 0.25
 glow_blend_mode = 0
-glow_hdr_scale = 1.66
-glow_hdr_luminance_cap = 28.52
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_akelj"]
 auto_exposure_enabled = true
@@ -29,11 +27,6 @@ auto_exposure_enabled = true
 [node name="Game" type="Node2D"]
 script = ExtResource("1_i4b6p")
 PlayerScene = ExtResource("5_mq360")
-
-[node name="Bullets" type="Node2D" parent="."]
-
-[node name="BulletSpawner" type="MultiplayerSpawner" parent="."]
-spawn_path = NodePath("../Bullets")
 
 [node name="SpaceEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_0b8j2")

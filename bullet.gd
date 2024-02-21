@@ -5,6 +5,7 @@ extends Area2D
 @onready var Collision: CollisionShape2D = $CollisionShape2D
 
 var velocity
+var peer_id
 
 func _ready():
 	Collision.disabled = true
@@ -18,7 +19,6 @@ func _on_body_entered(body):
 		body.queue_free()
 		queue_free()
 	if body.is_in_group("PlayerGroup"):
-		print("body hit body.uuid = {0}".format([body.uuid]))
 		GameManager.damge_player.emit(body.uuid, 10.0)
 		queue_free()
 
